@@ -1,23 +1,3 @@
-/*
-|--------------------------------------------------------------------------
-| Routes
-|--------------------------------------------------------------------------
-|
-| This file is dedicated for defining HTTP routes. A single file is enough
-| for majority of projects, however you can define routes in different
-| files and just make sure to import them inside this file. For example
-|
-| Define routes in following two files
-| ├── start/routes/cart.ts
-| ├── start/routes/customer.ts
-|
-| and then import them inside `start/routes.ts` as follows
-|
-| import './routes/cart'
-| import './routes/customer'
-|
-*/
-
 import HealthCheck from '@ioc:Adonis/Core/HealthCheck';
 import Route from '@ioc:Adonis/Core/Route';
 import GamesController from 'App/Controllers/Http/GamesController';
@@ -27,6 +7,12 @@ Route.get('/health', async ({ response }) => {
   return report.healthy ? response.ok(report) : response.badRequest(report);
 });
 
-Route.post('/games', async (ctx) => {
-  return new GamesController().create(ctx);
-});
+Route.post('/games', 'GamesController.create');
+
+Route.get('/games', 'GamesController.read');
+
+Route.get('/games/:id', 'GamesController.getById');
+
+Route.delete('/games/:id', 'GamesController.deleteById');
+
+Route.put('/games/:id', 'GamesController.update');

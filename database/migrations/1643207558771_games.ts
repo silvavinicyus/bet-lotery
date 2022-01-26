@@ -9,7 +9,7 @@ export default class Games extends BaseSchema {
       table.string('type').notNullable();
       table.string('description').notNullable();
       table.integer('range').notNullable();
-      table.integer('price').notNullable();
+      table.float('price').notNullable();
       table.integer('max_number').notNullable();
       table.string('color').notNullable();
       table.timestamp('updated_at', { useTz: true });
