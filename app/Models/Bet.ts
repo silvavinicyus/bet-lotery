@@ -1,6 +1,14 @@
 import { DateTime } from 'luxon';
 import { v4 as uuidV4 } from 'uuid';
-import { BaseModel, beforeCreate, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm';
+import {
+  BaseModel,
+  beforeCreate,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasOne,
+  hasOne,
+} from '@ioc:Adonis/Lucid/Orm';
 import Game from './Game';
 import User from './User';
 
@@ -23,11 +31,11 @@ export default class Bet extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;
 
-  @hasOne(() => Game)
-  public game: HasOne<typeof Game>;
+  @belongsTo(() => Game)
+  public game: BelongsTo<typeof Game>;
 
-  @hasOne(() => User)
-  public user: HasOne<typeof User>;
+  @belongsTo(() => User)
+  public user: BelongsTo<typeof User>;
 
   @beforeCreate()
   public static createUUID(bet: Bet) {

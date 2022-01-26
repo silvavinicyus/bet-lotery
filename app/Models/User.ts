@@ -1,7 +1,7 @@
-import { DateTime } from 'luxon';
-import { v4 as uuidV4 } from 'uuid';
 import Hash from '@ioc:Adonis/Core/Hash';
 import { BaseModel, beforeCreate, column } from '@ioc:Adonis/Lucid/Orm';
+import { DateTime } from 'luxon';
+import { v4 as uuidV4 } from 'uuid';
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })

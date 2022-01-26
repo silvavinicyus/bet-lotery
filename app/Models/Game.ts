@@ -1,6 +1,6 @@
+import { BaseModel, beforeCreate, column } from '@ioc:Adonis/Lucid/Orm';
 import { DateTime } from 'luxon';
 import { v4 as uuidV4 } from 'uuid';
-import { BaseModel, beforeCreate, column } from '@ioc:Adonis/Lucid/Orm';
 
 export default class Game extends BaseModel {
   @column({ isPrimary: true })

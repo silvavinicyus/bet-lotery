@@ -19,7 +19,7 @@ export default class UsersController {
 
     await user.save();
 
-    return response.status(201);
+    return response.created();
   }
 
   public async index() {

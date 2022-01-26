@@ -16,7 +16,7 @@ export default class GamesController {
 
     await game.save();
 
-    return response.status(201);
+    return response.created();
   }
 
   public async index() {
