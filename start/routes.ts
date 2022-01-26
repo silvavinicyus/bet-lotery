@@ -20,8 +20,13 @@
 
 import HealthCheck from '@ioc:Adonis/Core/HealthCheck';
 import Route from '@ioc:Adonis/Core/Route';
+import GamesController from 'App/Controllers/Http/GamesController';
 
 Route.get('/health', async ({ response }) => {
   const report = await HealthCheck.getReport();
   return report.healthy ? response.ok(report) : response.badRequest(report);
+});
+
+Route.post('/games', async (ctx) => {
+  return new GamesController().create(ctx);
 });
