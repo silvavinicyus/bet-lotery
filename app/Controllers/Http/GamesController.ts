@@ -1,4 +1,3 @@
-import { HttpContext, Response } from '@adonisjs/core/build/standalone';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Game from 'App/Models/Game';
 
@@ -20,7 +19,7 @@ export default class GamesController {
     return response.status(201);
   }
 
-  public async read() {
+  public async index() {
     const games = await Game.query();
 
     return games;
