@@ -1,14 +1,6 @@
+import { BaseModel, beforeCreate, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm';
 import { DateTime } from 'luxon';
 import { v4 as uuidV4 } from 'uuid';
-import {
-  BaseModel,
-  beforeCreate,
-  BelongsTo,
-  belongsTo,
-  column,
-  HasOne,
-  hasOne,
-} from '@ioc:Adonis/Lucid/Orm';
 import Game from './Game';
 import User from './User';
 
