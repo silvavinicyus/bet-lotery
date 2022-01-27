@@ -1,25 +1,30 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import User from 'App/Models/User';
+import CreateUserValidator from 'App/Validators/Users/CreateUsersValidator';
 
 export default class UsersController {
   public async store({ request, response }: HttpContextContract) {
     const { email, name, password } = request.body();
 
-    const userExists = await User.query().where('email', email);
+    // await request.validate(CreateUserValidator);
 
-    if (userExists.length > 0) {
-      return response.conflict({ message: 'Email already used!' });
+    try {
+      const user = new User();
+
+      user.email = email;
+      user.name = name;
+      user.password = password;
+
+      await user.save();
+
+      return response.created();
+    } catch (error) {
+      response.handleError({
+        status: error.status || 400,
+        message: 'Falha na criação do usuário',
+        error: error.message,
+      });
     }
-
-    const user = new User();
-
-    user.email = email;
-    user.name = name;
-    user.password = password;
-
-    await user.save();
-
-    return response.created();
   }
 
   public async index() {
