@@ -7,19 +7,13 @@ Route.get('/health', async ({ response }) => {
 });
 
 // games
-Route.post('/games', 'GamesController.create');
-Route.get('/games', 'GamesController.index');
-Route.get('/games/:id', 'GamesController.getById');
-Route.delete('/games/:id', 'GamesController.deleteById');
-Route.put('/games/:id', 'GamesController.update');
+
+Route.resource('/games', 'GamesController');
 
 // users
-Route.post('/users', 'UsersController.create');
-Route.get('/users', 'UsersController.index');
-Route.get('/users/:id', 'UsersController.getById');
-Route.delete('/users/:id', 'UsersController.delete');
-Route.put('/users/:id', 'UsersController.update');
+
+Route.resource('/users', 'UsersController');
 
 // bets
-Route.post('/bets/users/:userId/games/:gameId', 'BetsController.create');
+Route.post('/bets/users/:userId/games/:gameId', 'BetsController.store');
 Route.get('/bets', 'BetsController.index');

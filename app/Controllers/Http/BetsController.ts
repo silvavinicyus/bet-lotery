@@ -4,7 +4,7 @@ import Game from 'App/Models/Game';
 import User from 'App/Models/User';
 
 export default class BetsController {
-  public async create({ request, response }: HttpContextContract) {
+  public async store({ request, response }: HttpContextContract) {
     const { userId, gameId } = request.params();
     const { numbers } = request.body();
 

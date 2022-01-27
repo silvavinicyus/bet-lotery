@@ -2,7 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Game from 'App/Models/Game';
 
 export default class GamesController {
-  public async create({ request, response }: HttpContextContract) {
+  public async store({ request, response }: HttpContextContract) {
     const { type, description, range, price, maxNumber, color } = request.body();
 
     const game = new Game();
@@ -25,7 +25,7 @@ export default class GamesController {
     return games;
   }
 
-  public async getById({ request, response }: HttpContextContract) {
+  public async show({ request, response }: HttpContextContract) {
     const { id } = request.params();
 
     const game = await Game.find(id);
@@ -37,7 +37,7 @@ export default class GamesController {
     return game;
   }
 
-  public async deleteById({ request, response }: HttpContextContract) {
+  public async destroy({ request, response }: HttpContextContract) {
     const { id } = request.params();
 
     const game = await Game.find(id);

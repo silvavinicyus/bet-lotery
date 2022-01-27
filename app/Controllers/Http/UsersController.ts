@@ -2,7 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import User from 'App/Models/User';
 
 export default class UsersController {
-  public async create({ request, response }: HttpContextContract) {
+  public async store({ request, response }: HttpContextContract) {
     const { email, name, password } = request.body();
 
     const userExists = await User.query().where('email', email);
@@ -28,7 +28,7 @@ export default class UsersController {
     return users;
   }
 
-  public async getById({ request, response }: HttpContextContract) {
+  public async show({ request, response }: HttpContextContract) {
     const { id } = request.params();
 
     const userExists = await User.find(id);
@@ -40,7 +40,7 @@ export default class UsersController {
     return userExists;
   }
 
-  public async delete({ request, response }: HttpContextContract) {
+  public async destroy({ request, response }: HttpContextContract) {
     const { id } = request.params();
 
     const userExists = await User.find(id);
