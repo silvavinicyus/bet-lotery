@@ -16,4 +16,5 @@ Route.resource('/users', 'UsersController');
 
 // bets
 Route.post('/bets/users/:userId/games/:gameId', 'BetsController.store');
-Route.get('/bets', 'BetsController.index');
+
+Route.resource('/bets', 'BetsController');
