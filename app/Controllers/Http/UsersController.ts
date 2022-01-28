@@ -1,12 +1,15 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import User from 'App/Models/User';
-import CreateUserValidator from 'App/Validators/Users/CreateUsersValidator';
+import StoreUserValidator from 'App/Validators/Users/StoreUsersValidator';
+import ShowUserValidator from 'App/Validators/Users/ShowUserValidator';
+import DestroyUserValidator from 'App/Validators/Users/DestroyUsersValidator';
+import UpdateUserValidator from 'App/Validators/Users/UpdateUsersValidator';
 
 export default class UsersController {
   public async store({ request, response }: HttpContextContract) {
     const { email, name, password } = request.body();
 
-    await request.validate(CreateUserValidator);
+    await request.validate(StoreUserValidator);
 
     try {
       const user = new User();
@@ -33,14 +36,12 @@ export default class UsersController {
     return users;
   }
 
-  public async show({ request, response }: HttpContextContract) {
+  public async show({ request }: HttpContextContract) {
     const { id } = request.params();
 
-    const userExists = await User.find(id);
+    await request.validate(ShowUserValidator);
 
-    if (!userExists) {
-      return response.notFound({ message: 'There is no user with the given id' });
-    }
+    const userExists = await User.find(id);
 
     return userExists;
   }
@@ -48,37 +49,25 @@ export default class UsersController {
   public async destroy({ request, response }: HttpContextContract) {
     const { id } = request.params();
 
-    const userExists = await User.find(id);
+    await request.validate(DestroyUserValidator);
 
-    if (!userExists) {
-      return response.notFound({ message: 'There is no user with the given id' });
-    }
+    const userExists = await User.findOrFail(id);
 
     await userExists.delete();
 
     return response.noContent();
   }
 
-  public async update({ request, response }: HttpContextContract) {
+  public async update({ request }: HttpContextContract) {
     const { id } = request.params();
 
     const { email, name } = request.body();
 
-    const userExists = await User.find(id);
+    await request.validate(UpdateUserValidator);
 
-    if (!userExists) {
-      return response.notFound({ message: 'There is no user with the given id' });
-    }
+    const userExists = await User.findOrFail(id);
 
-    if (email) {
-      const emailUsed = await User.query().where('email', email);
-
-      if (emailUsed.length > 0 && email !== userExists.email) {
-        return response.conflict({ message: 'Email already used!' });
-      }
-
-      userExists.email = email;
-    }
+    email ? (userExists.email = email) : '';
 
     name ? (userExists.name = name) : '';
 

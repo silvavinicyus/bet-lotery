@@ -11,7 +11,7 @@ export default class CreateUserValidator extends CustomMessages {
     name: schema.string({ trim: true }, [
       rules.minLength(3),
       rules.alpha({
-        allow: ['space', 'underscore', 'dash'],
+        allow: ['space'],
       }),
     ]),
     email: schema.string({ trim: true }, [
