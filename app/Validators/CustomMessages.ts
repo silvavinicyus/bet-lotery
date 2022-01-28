@@ -1,10 +1,10 @@
 export default class CustomMessages {
   public messages = {
     //Pattern message for Types
-    'string': '{{ field }} field is invalid string',
-    'boolean': '{{ field }} field is invalid boolean',
-    'number': '{{ field }} field is invalid number',
-    'date': '{{ field }} field is invalid date',
+    'string': '{{ field }} field is an invalid string',
+    'boolean': '{{ field }} field is an invalid boolean',
+    'number': '{{ field }} field is an invalid number',
+    'date': '{{ field }} field is an invalid date',
     'enum': 'the value must be one of {{ options.choices }}',
     'enumSet': 'the value must be one of {{ options.choices }}',
 
@@ -12,8 +12,8 @@ export default class CustomMessages {
     'file.size': 'The file size must be under {{ options.size }}',
     'file.extname': 'The file must have one of {{ options.extnames }} extension names',
 
-    'array': '{{ field }} field is invalid array',
-    'object': '{{ field }} field is invalid object',
+    'array': '{{ field }} field is an invalid array',
+    'object': '{{ field }} field is an invalid object',
 
     //Pattern message for rules
     'required': '{{ field }} field is required',
@@ -24,7 +24,7 @@ export default class CustomMessages {
     'alpha': '{{ field }} field only accepts letters',
     'confirmed': '{{ field }} field must be the same as the confirmation field',
     'email': '{{ field }} field should be a valid email',
-    'exists': '{{ field }} not found in us database',
+    'exists': '{{ field }} not found in our database',
     'unique': '{{ field }} already exists',
     'maxLength': '{{ field }} field must be up to {{ options.maxLength }}',
     'minLength': '{{ field }} field must be at least {{ options.minLength }}',
