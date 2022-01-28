@@ -31,7 +31,7 @@ export default class UsersController {
   }
 
   public async index() {
-    const users = await User.query();
+    const users = await User.query().preload('bets');
 
     return users;
   }
@@ -41,7 +41,7 @@ export default class UsersController {
 
     await request.validate(ShowUserValidator);
 
-    const userExists = await User.find(id);
+    const userExists = await User.query().where('id', id).preload('bets');
 
     return userExists;
   }
