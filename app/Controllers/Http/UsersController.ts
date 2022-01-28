@@ -1,9 +1,9 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import User from 'App/Models/User';
-import StoreUserValidator from 'App/Validators/Users/StoreUsersValidator';
+import StoreUserValidator from 'App/Validators/Users/StoreUserValidator';
 import ShowUserValidator from 'App/Validators/Users/ShowUserValidator';
 import DestroyUserValidator from 'App/Validators/Users/DestroyUsersValidator';
-import UpdateUserValidator from 'App/Validators/Users/UpdateUsersValidator';
+import UpdateUserValidator from 'App/Validators/Users/UpdateUserValidator';
 
 export default class UsersController {
   public async store({ request, response }: HttpContextContract) {

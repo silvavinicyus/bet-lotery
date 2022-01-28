@@ -2,7 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import { schema, rules } from '@ioc:Adonis/Core/Validator';
 import CustomMessages from '../CustomMessages';
 
-export default class CreateUserValidator extends CustomMessages {
+export default class StoreUserValidator extends CustomMessages {
   constructor(protected ctx: HttpContextContract) {
     super();
   }
