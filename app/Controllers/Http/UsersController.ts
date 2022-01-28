@@ -1,8 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import User from 'App/Models/User';
-import StoreUserValidator from 'App/Validators/Users/StoreUserValidator';
-import ShowUserValidator from 'App/Validators/Users/ShowUserValidator';
 import DestroyUserValidator from 'App/Validators/Users/DestroyUsersValidator';
+import ShowUserValidator from 'App/Validators/Users/ShowUserValidator';
+import StoreUserValidator from 'App/Validators/Users/StoreUserValidator';
 import UpdateUserValidator from 'App/Validators/Users/UpdateUserValidator';
 
 export default class UsersController {
@@ -31,7 +31,7 @@ export default class UsersController {
   }
 
   public async index() {
-    const users = await User.query().preload('bets');
+    const users = await User.query().preload('bets').preload('userPermissions');
 
     return users;
   }
@@ -41,7 +41,12 @@ export default class UsersController {
 
     await request.validate(ShowUserValidator);
 
-    const userExists = await User.query().where('id', id).preload('bets');
+    const userExists = await User.query()
+      .where('id', id)
+      .preload('bets')
+      .preload('userPermissions', (permissions) => {
+        permissions.preload('permission');
+      });
 
     return userExists;
   }

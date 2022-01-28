@@ -3,6 +3,7 @@ import { BaseModel, beforeCreate, column, HasMany, hasMany } from '@ioc:Adonis/L
 import { DateTime } from 'luxon';
 import { v4 as uuidV4 } from 'uuid';
 import Bet from './Bet';
+import UserPermission from './UserPermission';
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -25,6 +26,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Bet)
   public bets: HasMany<typeof Bet>;
+
+  @hasMany(() => UserPermission)
+  public userPermissions: HasMany<typeof UserPermission>;
 
   @beforeCreate()
   public static async hashPassword(user: User) {
