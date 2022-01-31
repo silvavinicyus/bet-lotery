@@ -21,5 +21,7 @@ Route.resource('/permissions', 'PermissionsController');
 
 //user permissions
 Route.post('/permissions/add/:userId', 'UserPermissionsController.addPermission');
-
 Route.delete('/permissions/remove/:id', 'UserPermissionsController.removePermission');
+
+// authenticate
+Route.post('/authenticate', 'AuthController.login');
