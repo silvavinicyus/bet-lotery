@@ -8,18 +8,11 @@ export default class BetsController {
   public async store({ request, response }: HttpContextContract) {
     await request.validate(StoreBetValidator);
 
-    const { userId, gameId } = request.params();
-    const { numbers } = request.body();
+    const { userId, bets } = request.body();
 
-    const bet = new Bet();
+    await Bet.createMany(bets);
 
-    bet.userId = userId;
-    bet.gameId = gameId;
-    bet.numbers = numbers;
-
-    await bet.save();
-
-    return response.created();
+    return response.ok({ userId, bets });
   }
 
   public async index() {

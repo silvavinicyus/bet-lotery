@@ -5,14 +5,12 @@ export default class AuthController {
     const { email, password } = request.body();
 
     try {
-      console.log(email);
-      console.log(password);
       const token = await auth.use('api').attempt(email, password, {
         expiresIn: '24hours',
       });
       return token.toJSON();
-    } catch (err) {
-      return response.badRequest('Invalid credentials' + err);
+    } catch {
+      return response.badRequest('Invalid credentials');
     }
   }
 }
