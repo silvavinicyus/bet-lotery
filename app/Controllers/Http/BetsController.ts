@@ -5,12 +5,6 @@ import DestroyBetValidator from 'App/Validators/Bets/DestroyBetValidator';
 import ShowBetValidator from 'App/Validators/Bets/ShowBetValidator';
 import StoreBetValidator from 'App/Validators/Bets/StoreBetValidator';
 
-interface Ibet {
-  userId: string;
-  gameId: string;
-  value: number;
-}
-
 export default class BetsController {
   public async store({ request, response }: HttpContextContract) {
     await request.validate(StoreBetValidator);
@@ -26,8 +20,8 @@ export default class BetsController {
 
     if (totalValue < 30) {
       return response.badRequest({
-        message: 'To make a bet your cart must be at least R$ 30,00',
-        totalValue,
+        message: 'R$ 30,00 is the minimum amount to',
+        value: totalValue,
       });
     }
 
