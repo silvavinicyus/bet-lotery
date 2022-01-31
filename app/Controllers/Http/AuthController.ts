@@ -9,8 +9,8 @@ export default class AuthController {
         expiresIn: '24hours',
       });
       return token.toJSON();
-    } catch (err) {
-      return response.badRequest({ messaeg: 'Invalid credentials', err });
+    } catch {
+      return response.badRequest({ messaeg: 'Invalid credentials' });
     }
   }
 }
