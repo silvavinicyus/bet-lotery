@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Bet from 'App/Models/Bet';
+import Cart from 'App/Models/Cart';
 import Game from 'App/Models/Game';
 import DestroyBetValidator from 'App/Validators/Bets/DestroyBetValidator';
 import ShowBetValidator from 'App/Validators/Bets/ShowBetValidator';
@@ -18,9 +19,13 @@ export default class BetsController {
       totalValue += price;
     }
 
-    if (totalValue < 30) {
+    const { value } = await Cart.firstOrFail();
+
+    const minimumValuToBet: number = value || 30;
+
+    if (totalValue < minimumValuToBet) {
       return response.badRequest({
-        message: 'R$ 30,00 is the minimum amount to',
+        message: `R$ ${minimumValuToBet} is the minimum amount to`,
         value: totalValue,
       });
     }
