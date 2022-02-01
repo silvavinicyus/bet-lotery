@@ -22,7 +22,7 @@ export default class SendEmailWhenNotBetting extends BaseTask {
       const diffDays = Math.ceil((dateNow - user.createdAt.toMillis()) / daysInMilliseconds);
 
       if (user.bets.length === 0 || diffDays > 7) {
-        await Mail.preview((message) => {
+        await Mail.send((message) => {
           message
             .from('admin@bet.lotery.com')
             .to(user.email)

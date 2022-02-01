@@ -21,7 +21,7 @@ export default class UsersController {
 
       await user.save();
 
-      await Mail.preview((message) => {
+      await Mail.send((message) => {
         message
           .from('admin@bet.lotery.com')
           .to(user.email)

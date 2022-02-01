@@ -42,3 +42,5 @@ Route.delete('/permissions/remove/:id', 'UserPermissionsController.removePermiss
 
 // authenticate
 Route.post('/authenticate', 'AuthController.login');
+Route.post('/forgot/:email', 'ForgotPasswordController.store');
+Route.post('/reset', 'ResetPasswordController.store');
