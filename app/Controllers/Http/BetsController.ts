@@ -1,3 +1,4 @@
+import Mail from '@ioc:Adonis/Addons/Mail';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Bet from 'App/Models/Bet';
 import Cart from 'App/Models/Cart';
@@ -7,7 +8,7 @@ import ShowBetValidator from 'App/Validators/Bets/ShowBetValidator';
 import StoreBetValidator from 'App/Validators/Bets/StoreBetValidator';
 
 export default class BetsController {
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ auth, request, response }: HttpContextContract) {
     await request.validate(StoreBetValidator);
 
     const { bets } = request.body();
@@ -31,6 +32,14 @@ export default class BetsController {
     }
 
     await Bet.createMany(bets);
+
+    await Mail.send((message) => {
+      message
+        .from('admin@bet.lotery.com')
+        .to(auth.user?.email || '')
+        .subject('Your bet has been created!')
+        .htmlView('emails/newbet', { name: auth.user?.name, value: totalValue });
+    });
 
     return response.created();
   }

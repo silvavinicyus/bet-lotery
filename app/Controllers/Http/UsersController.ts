@@ -1,3 +1,4 @@
+import Mail from '@ioc:Adonis/Addons/Mail';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import User from 'App/Models/User';
 import DestroyUserValidator from 'App/Validators/Users/DestroyUsersValidator';
@@ -19,6 +20,14 @@ export default class UsersController {
       user.password = password;
 
       await user.save();
+
+      await Mail.preview((message) => {
+        message
+          .from('admin@bet.lotery.com')
+          .to(user.email)
+          .subject('Welcome to Bet Lotery!')
+          .htmlView('emails/newuser', { name: user.name });
+      });
 
       return response.created();
     } catch (error) {
