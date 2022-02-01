@@ -4,13 +4,8 @@ import User from 'App/Models/User';
 
 export default class SendEmailWhenNotBetting extends BaseTask {
   public static get schedule() {
-    // return '0 9 * * *';
-    return '54 03 * * *';
+    return '0 9 * * *';
   }
-  /**
-   * Set enable use .lock file for block run retry task
-   * Lock file save to `build/tmpTaskLock`
-   */
   public static get useLock() {
     return false;
   }
@@ -26,13 +21,13 @@ export default class SendEmailWhenNotBetting extends BaseTask {
     users.forEach(async (user) => {
       const diffDays = Math.ceil((dateNow - user.createdAt.toMillis()) / daysInMilliseconds);
 
-      if (user.bets.length === 0 || diffDays > 30) {
+      if (user.bets.length === 0 || diffDays > 7) {
         await Mail.preview((message) => {
           message
-            .from('info@example.com')
-            .to('vinicyus346@gmail.com')
+            .from('admin@bet.lotery.com')
+            .to(user.email)
             .subject("Let's Bet!")
-            .htmlView('emails/nobet', { name: 'Vinicyus' });
+            .htmlView('emails/nobet', { name: user.name });
         });
       }
     });
