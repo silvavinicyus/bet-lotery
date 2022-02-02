@@ -17,7 +17,7 @@ export default class PermissionsController {
 
     await permission.save();
 
-    return response.created();
+    return response.created(permission);
   }
 
   public async index() {

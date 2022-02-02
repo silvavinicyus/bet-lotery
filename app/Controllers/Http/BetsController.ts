@@ -16,6 +16,13 @@ export default class BetsController {
     let totalValue = 0;
 
     for await (let bet of bets) {
+      if (bet.userId !== auth.user?.id) {
+        return response.badRequest({
+          error: 'This user does not match with the logged user',
+          bet: bet.userId,
+          auth: auth.user?.id,
+        });
+      }
       const { price } = await Game.findOrFail(bet.gameId);
       totalValue += price;
     }
@@ -26,8 +33,10 @@ export default class BetsController {
 
     if (totalValue < minimumValuToBet) {
       return response.badRequest({
-        message: `R$ ${minimumValuToBet} is the minimum amount to`,
-        value: totalValue,
+        message: `R$ ${minimumValuToBet.toLocaleString('pt-br', {
+          minimumFractionDigits: 2,
+        })} is the minimum amount to`,
+        value: totalValue.toLocaleString('pt-br', { minimumFractionDigits: 2 }),
       });
     }
 
@@ -38,10 +47,13 @@ export default class BetsController {
         .from('admin@bet.lotery.com')
         .to(auth.user?.email || '')
         .subject('Your bet has been created!')
-        .htmlView('emails/newbet', { name: auth.user?.name, value: totalValue });
+        .htmlView('emails/newbet', {
+          name: auth.user?.name,
+          value: totalValue.toLocaleString('pt-br', { minimumFractionDigits: 2 }),
+        });
     });
 
-    return response.created();
+    return response.created(bets);
   }
 
   public async index() {

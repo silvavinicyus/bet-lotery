@@ -19,6 +19,8 @@ export default class UserPermissionsController {
     userPermission.permissionId = permission.id;
 
     await userPermission.save();
+
+    return userPermission;
   }
 
   public async removePermission({ request, response }: HttpContextContract) {

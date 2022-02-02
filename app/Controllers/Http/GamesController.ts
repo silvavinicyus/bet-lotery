@@ -22,7 +22,7 @@ export default class GamesController {
 
     await game.save();
 
-    return response.created();
+    return response.created(game);
   }
 
   public async index() {
@@ -31,16 +31,12 @@ export default class GamesController {
     return games;
   }
 
-  public async show({ request, response }: HttpContextContract) {
+  public async show({ request }: HttpContextContract) {
     await request.validate(ShowGameValidator);
 
     const { id } = request.params();
 
     const game = await Game.find(id);
-
-    if (!game) {
-      return response.notFound({ message: 'There is no game with the given id' });
-    }
 
     return game;
   }
@@ -50,11 +46,7 @@ export default class GamesController {
 
     const { id } = request.params();
 
-    const game = await Game.find(id);
-
-    if (!game) {
-      return response.notFound({ message: 'There is no game with the given id' });
-    }
+    const game = await Game.findOrFail(id);
 
     await game.delete();
 

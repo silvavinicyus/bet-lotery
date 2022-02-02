@@ -38,7 +38,7 @@ export default class UsersController {
           .htmlView('emails/newuser', { name: user.name });
       });
 
-      return response.created();
+      return response.created(user);
     } catch (error) {
       response.handleError({
         status: error.status || 400,

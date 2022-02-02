@@ -29,7 +29,7 @@ export default class ForgotPasswordController {
         message
           .from('admin@bet.lotery.com')
           .to(email)
-          .subject('Welcome to Bet Lotery!')
+          .subject('Forgot Password')
           .htmlView('emails/forgotpassword', { name: user.name, url: forgtPasswordUrl });
       })
     );
