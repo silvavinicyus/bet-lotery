@@ -24,13 +24,15 @@ export default class ForgotPasswordController {
 
     const forgtPasswordUrl = `${Env.get('FRONTEND_URL')}/reset?token=${token}`;
 
-    await Mail.send((message) => {
-      message
-        .from('admin@bet.lotery.com')
-        .to(email)
-        .subject('Welcome to Bet Lotery!')
-        .htmlView('emails/forgotpassword', { name: user.name, url: forgtPasswordUrl });
-    });
+    console.log(
+      await Mail.preview((message) => {
+        message
+          .from('admin@bet.lotery.com')
+          .to(email)
+          .subject('Welcome to Bet Lotery!')
+          .htmlView('emails/forgotpassword', { name: user.name, url: forgtPasswordUrl });
+      })
+    );
 
     return response.noContent();
   }
