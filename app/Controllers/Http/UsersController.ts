@@ -1,6 +1,8 @@
 import Mail from '@ioc:Adonis/Addons/Mail';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import Permission from 'App/Models/Permission';
 import User from 'App/Models/User';
+import UserPermission from 'App/Models/UserPermission';
 import DestroyUserValidator from 'App/Validators/Users/DestroyUsersValidator';
 import ShowUserValidator from 'App/Validators/Users/ShowUserValidator';
 import StoreUserValidator from 'App/Validators/Users/StoreUserValidator';
@@ -20,6 +22,13 @@ export default class UsersController {
       user.password = password;
 
       await user.save();
+
+      const permission = await Permission.findByOrFail('type', 'player');
+
+      await UserPermission.create({
+        userId: user.id,
+        permissionId: permission.id,
+      });
 
       await Mail.send((message) => {
         message

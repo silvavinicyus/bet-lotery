@@ -22,6 +22,8 @@ Route.resource('/users', 'UsersController').middleware({
 // bets
 Route.resource('/bets', 'BetsController').middleware({
   '*': ['auth'],
+  'create': ['isPlayer'],
+  'destroy': ['isPlayer'],
   'index': ['isAdmin'],
 });
 

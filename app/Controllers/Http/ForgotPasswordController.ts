@@ -25,7 +25,7 @@ export default class ForgotPasswordController {
     const forgtPasswordUrl = `${Env.get('FRONTEND_URL')}/reset?token=${token}`;
 
     console.log(
-      await Mail.preview((message) => {
+      await Mail.send((message) => {
         message
           .from('admin@bet.lotery.com')
           .to(email)
