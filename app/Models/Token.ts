@@ -6,7 +6,10 @@ export default class Token extends BaseModel {
   public id: number;
 
   @column()
-  public user_id: string;
+  public secureId: string;
+
+  @column()
+  public user_id: number;
 
   @column()
   public token: string;

@@ -5,7 +5,8 @@ export default class Carts extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id');
+      table.increments('id').unsigned().primary();
+      table.uuid('secure_id').notNullable();
       table.float('value').notNullable();
       table.timestamp('created_at', { useTz: true });
       table.timestamp('updated_at', { useTz: true });

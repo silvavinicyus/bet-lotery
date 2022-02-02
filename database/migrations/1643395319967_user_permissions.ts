@@ -5,7 +5,8 @@ export default class UserPermissions extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id').primary();
+      table.increments('id').unsigned().primary();
+      table.uuid('secure_id').notNullable();
       table.string('user_id').notNullable();
       table.string('permission_id').notNullable();
       table.timestamp('created_at', { useTz: true });
