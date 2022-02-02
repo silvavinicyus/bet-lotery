@@ -44,9 +44,9 @@ export default class GamesController {
   public async destroy({ request, response }: HttpContextContract) {
     await request.validate(DestroyGameValidator);
 
-    const { id } = request.params();
+    const { id: secureId } = request.params();
 
-    const game = await Game.findOrFail(id);
+    const game = await Game.findByOrFail('secure_id', secureId);
 
     await game.delete();
 
@@ -56,10 +56,10 @@ export default class GamesController {
   public async update({ request }: HttpContextContract) {
     await request.validate(UpdateGameValidator);
 
-    const { id } = request.params();
+    const { id: secureId } = request.params();
     const { type, description, range, price, maxNumber, color } = request.body();
 
-    const game = await Game.findOrFail(id);
+    const game = await Game.findByOrFail('secure_id', secureId);
 
     type ? (game.type = type) : '';
     description ? (game.description = description) : '';

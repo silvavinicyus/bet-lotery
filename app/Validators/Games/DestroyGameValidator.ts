@@ -9,7 +9,7 @@ export default class DestroyGameValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.number([rules.unsigned(), rules.exists({ table: 'games', column: 'id' })]),
+      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'games', column: 'secure_id' })]),
     }),
   });
 }

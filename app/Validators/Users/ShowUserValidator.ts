@@ -9,7 +9,7 @@ export default class ShowUserValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'users', column: 'id' })]),
+      id: schema.number([rules.unsigned(), rules.exists({ table: 'users', column: 'id' })]),
     }),
   });
 }

@@ -9,7 +9,10 @@ export default class ForgotPasswordValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      email: schema.string({}, [rules.email(), rules.exists({ table: 'users', column: 'email' })]),
+      secureId: schema.string({}, [
+        rules.uuid(),
+        rules.exists({ table: 'users', column: 'secure_id' }),
+      ]),
     }),
   });
 }

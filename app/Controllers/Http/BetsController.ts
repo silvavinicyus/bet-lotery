@@ -16,7 +16,8 @@ export default class BetsController {
     let totalValue = 0;
 
     for await (let bet of bets) {
-      if (bet.userId !== auth.user?.id) {
+      // eslint-disable-next-line eqeqeq
+      if (bet.userId != auth.user?.id) {
         return response.badRequest({
           error: 'This user does not match with the logged user',
           bet: bet.userId,
@@ -75,9 +76,9 @@ export default class BetsController {
   public async destroy({ request, response }: HttpContextContract) {
     await request.validate(DestroyBetValidator);
 
-    const { id } = request.params();
+    const { id: secureId } = request.params();
 
-    const bet = await Bet.findOrFail(id);
+    const bet = await Bet.findByOrFail('secure_id', secureId);
 
     await bet.delete();
 

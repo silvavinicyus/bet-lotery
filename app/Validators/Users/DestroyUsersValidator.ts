@@ -9,7 +9,7 @@ export default class DestroyUserValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'users', column: 'id' })]),
+      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'users', column: 'secure_id' })]),
     }),
   });
 }

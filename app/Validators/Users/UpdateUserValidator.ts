@@ -9,11 +9,11 @@ export default class UpdateUserValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'users', column: 'id' })]),
+      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'users', column: 'secure_id' })]),
     }),
     email: schema.string.optional({}, [
       rules.email(),
-      rules.exists({ table: 'users', column: 'email', caseInsensitive: true }),
+      rules.unique({ table: 'users', column: 'email', caseInsensitive: true }),
     ]),
     name: schema.string.optional({}, [
       rules.minLength(3),
