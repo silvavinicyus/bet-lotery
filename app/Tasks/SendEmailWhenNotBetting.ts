@@ -4,7 +4,7 @@ import User from 'App/Models/User';
 
 export default class SendEmailWhenNotBetting extends BaseTask {
   public static get schedule() {
-    return '0 9 * * *';
+    return '0 09 * * *';
   }
   public static get useLock() {
     return false;
