@@ -1,23 +1,45 @@
+import Mail from '@ioc:Adonis/Addons/Mail';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Bet from 'App/Models/Bet';
+import Cart from 'App/Models/Cart';
+import Game from 'App/Models/Game';
 import DestroyBetValidator from 'App/Validators/Bets/DestroyBetValidator';
 import ShowBetValidator from 'App/Validators/Bets/ShowBetValidator';
 import StoreBetValidator from 'App/Validators/Bets/StoreBetValidator';
 
 export default class BetsController {
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ auth, request, response }: HttpContextContract) {
     await request.validate(StoreBetValidator);
 
-    const { userId, gameId } = request.params();
-    const { numbers } = request.body();
+    const { bets } = request.body();
 
-    const bet = new Bet();
+    let totalValue = 0;
 
-    bet.userId = userId;
-    bet.gameId = gameId;
-    bet.numbers = numbers;
+    for await (let bet of bets) {
+      const { price } = await Game.findOrFail(bet.gameId);
+      totalValue += price;
+    }
 
-    await bet.save();
+    const { value } = await Cart.firstOrFail();
+
+    const minimumValuToBet: number = value || 30;
+
+    if (totalValue < minimumValuToBet) {
+      return response.badRequest({
+        message: `R$ ${minimumValuToBet} is the minimum amount to`,
+        value: totalValue,
+      });
+    }
+
+    await Bet.createMany(bets);
+
+    await Mail.send((message) => {
+      message
+        .from('admin@bet.lotery.com')
+        .to(auth.user?.email || '')
+        .subject('Your bet has been created!')
+        .htmlView('emails/newbet', { name: auth.user?.name, value: totalValue });
+    });
 
     return response.created();
   }

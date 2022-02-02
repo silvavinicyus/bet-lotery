@@ -1,8 +1,11 @@
+import Mail from '@ioc:Adonis/Addons/Mail';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import Permission from 'App/Models/Permission';
 import User from 'App/Models/User';
-import StoreUserValidator from 'App/Validators/Users/StoreUserValidator';
-import ShowUserValidator from 'App/Validators/Users/ShowUserValidator';
+import UserPermission from 'App/Models/UserPermission';
 import DestroyUserValidator from 'App/Validators/Users/DestroyUsersValidator';
+import ShowUserValidator from 'App/Validators/Users/ShowUserValidator';
+import StoreUserValidator from 'App/Validators/Users/StoreUserValidator';
 import UpdateUserValidator from 'App/Validators/Users/UpdateUserValidator';
 
 export default class UsersController {
@@ -20,6 +23,21 @@ export default class UsersController {
 
       await user.save();
 
+      const permission = await Permission.findByOrFail('type', 'player');
+
+      await UserPermission.create({
+        userId: user.id,
+        permissionId: permission.id,
+      });
+
+      await Mail.send((message) => {
+        message
+          .from('admin@bet.lotery.com')
+          .to(user.email)
+          .subject('Welcome to Bet Lotery!')
+          .htmlView('emails/newuser', { name: user.name });
+      });
+
       return response.created();
     } catch (error) {
       response.handleError({
@@ -31,7 +49,7 @@ export default class UsersController {
   }
 
   public async index() {
-    const users = await User.query();
+    const users = await User.query().preload('bets').preload('userPermissions');
 
     return users;
   }
@@ -41,7 +59,12 @@ export default class UsersController {
 
     await request.validate(ShowUserValidator);
 
-    const userExists = await User.find(id);
+    const userExists = await User.query()
+      .where('id', id)
+      .preload('bets')
+      .preload('userPermissions', (permissions) => {
+        permissions.preload('permission');
+      });
 
     return userExists;
   }

@@ -7,14 +7,42 @@ Route.get('/health', async ({ response }) => {
 });
 
 // games
-
-Route.resource('/games', 'GamesController');
+Route.resource('/games', 'GamesController').middleware({
+  '*': ['auth', 'isAdmin'],
+});
 
 // users
-
-Route.resource('/users', 'UsersController');
+Route.resource('/users', 'UsersController').middleware({
+  index: ['auth', 'isAdmin'],
+  destroy: ['auth', 'isPlayer'],
+  update: ['auth', 'isPlayer'],
+  show: ['auth', 'isPlayer'],
+});
 
 // bets
-Route.post('/bets/users/:userId/games/:gameId', 'BetsController.store');
+Route.resource('/bets', 'BetsController').middleware({
+  '*': ['auth'],
+  'create': ['isPlayer'],
+  'destroy': ['isPlayer'],
+  'index': ['isAdmin'],
+});
 
-Route.resource('/bets', 'BetsController');
+// permissions
+Route.resource('/permissions', 'PermissionsController').middleware({
+  '*': ['auth', 'isAdmin'],
+});
+
+//user permissions
+Route.post('/permissions/add/:userId', 'UserPermissionsController.addPermission').middleware([
+  'auth',
+  'isAdmin',
+]);
+Route.delete('/permissions/remove/:id', 'UserPermissionsController.removePermission').middleware([
+  'auth',
+  'isAdmin',
+]);
+
+// authenticate
+Route.post('/authenticate', 'AuthController.login');
+Route.post('/forgot/:email', 'ForgotPasswordController.store');
+Route.post('/reset', 'ResetPasswordController.store');
