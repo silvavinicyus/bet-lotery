@@ -9,7 +9,7 @@ export default class DestroyBetValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'bets', column: 'id' })]),
+      id: schema.number([rules.unsigned(), rules.exists({ table: 'bets', column: 'id' })]),
     }),
   });
 }

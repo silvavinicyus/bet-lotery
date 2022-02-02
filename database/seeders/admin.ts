@@ -14,11 +14,11 @@ export default class AdminSeeder extends BaseSeeder {
 
     const permissions = await Permission.createMany([
       {
-        id: uuidAdminPermission,
+        secureId: uuidAdminPermission,
         type: 'admin',
       },
       {
-        id: uuidPlayerPermission,
+        secureId: uuidPlayerPermission,
         type: 'player',
       },
     ]);
@@ -26,7 +26,7 @@ export default class AdminSeeder extends BaseSeeder {
     const uuidAdminUser = uuidV4();
 
     const user = await User.create({
-      id: uuidAdminUser,
+      secureId: uuidAdminUser,
       email: 'admin@bet.lotery.com',
       name: 'admin',
       password: 'admin',
@@ -34,16 +34,18 @@ export default class AdminSeeder extends BaseSeeder {
 
     const uuidUserPermission = uuidV4();
 
-    await UserPermission.create({
-      id: uuidUserPermission,
+    const aw1 = await UserPermission.create({
+      secureId: uuidUserPermission,
       permissionId: permissions[0].id,
       userId: user.id,
     });
 
-    await UserPermission.create({
-      id: uuidUserPermission,
+    const aw2 = await UserPermission.create({
+      secureId: uuidUserPermission,
       permissionId: permissions[1].id,
       userId: user.id,
     });
+
+    console.log({ aw1, aw2 });
   }
 }

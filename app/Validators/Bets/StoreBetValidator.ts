@@ -10,8 +10,8 @@ export default class StoreBetValidator extends CustomMessages {
   public schema = schema.create({
     bets: schema.array().members(
       schema.object().members({
-        userId: schema.string({}, [rules.uuid(), rules.exists({ table: 'users', column: 'id' })]),
-        gameId: schema.string({}, [rules.uuid(), rules.exists({ table: 'games', column: 'id' })]),
+        userId: schema.number([rules.uuid(), rules.exists({ table: 'users', column: 'id' })]),
+        gameId: schema.number([rules.uuid(), rules.exists({ table: 'games', column: 'id' })]),
         numbers: schema.string({ trim: true }, [rules.minLength(8)]),
       })
     ),

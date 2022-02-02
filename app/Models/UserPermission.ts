@@ -12,7 +12,7 @@ export default class UserPermission extends BaseModel {
   public secureId: string;
 
   @column()
-  public userId: string;
+  public userId: number;
 
   @column()
   public permissionId: number;
