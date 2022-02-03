@@ -1,9 +1,7 @@
-import User from 'App/Models/User';
-import test, { group } from 'japa';
-import { v4 as uuidV4 } from 'uuid';
-import request from 'supertest';
-import UserPermission from 'App/Models/UserPermission';
 import Permission from 'App/Models/Permission';
+import User from 'App/Models/User';
+import test from 'japa';
+import request from 'supertest';
 
 const BASE_URL = `http://${process.env.HOST}:${process.env.PORT}`;
 
@@ -37,7 +35,7 @@ test.group('User tests with supertest', (group) => {
   });
 
   test('Should not be able to create a user with weak password', async (assert) => {
-    const { body } = await request(BASE_URL)
+    await request(BASE_URL)
       .post('/users')
       .send({
         email: 'joao1@gmail.com',

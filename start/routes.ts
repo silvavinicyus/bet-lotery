@@ -13,7 +13,7 @@ Route.resource('/games', 'GamesController').middleware({
 
 // users
 Route.resource('/users', 'UsersController').middleware({
-  // index: ['auth', 'isAdmin'],
+  index: ['auth', 'isAdmin'],
   destroy: ['auth', 'isPlayer'],
   update: ['auth', 'isPlayer'],
   show: ['auth', 'isPlayer'],

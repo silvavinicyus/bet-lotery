@@ -21,7 +21,7 @@ export default class AuthController {
         token,
       });
     } catch {
-      return response.badRequest({ messaeg: 'Invalid credentials' });
+      return response.badRequest({ message: 'Invalid credentials' });
     }
   }
 }
