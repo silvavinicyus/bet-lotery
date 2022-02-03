@@ -10,9 +10,9 @@ import UpdateUserValidator from 'App/Validators/Users/UpdateUserValidator';
 
 export default class UsersController {
   public async store({ request, response }: HttpContextContract) {
-    const { email, name, password } = request.body();
-
     await request.validate(StoreUserValidator);
+
+    const { email, name, password } = request.body();
 
     try {
       const user = new User();

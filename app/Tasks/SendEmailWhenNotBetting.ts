@@ -20,15 +20,17 @@ export default class SendEmailWhenNotBetting extends BaseTask {
 
     users.forEach(async (user) => {
       const lastBet = user.bets.pop();
-      let diffDaysBets;
+      let diffDaysLastBets;
 
       if (lastBet) {
-        diffDaysBets = Math.ceil((dateNow - lastBet.createdAt.toMillis()) / daysInMilliseconds);
+        diffDaysLastBets = Math.ceil((dateNow - lastBet.createdAt.toMillis()) / daysInMilliseconds);
       }
 
-      const diffDaysUser = Math.ceil((dateNow - user.createdAt.toMillis()) / daysInMilliseconds);
+      const diffDaysUserCreated = Math.ceil(
+        (dateNow - user.createdAt.toMillis()) / daysInMilliseconds
+      );
 
-      if ((user.bets.length === 0 && diffDaysUser >= 7) || diffDaysBets > 7) {
+      if ((user.bets.length === 0 && diffDaysUserCreated >= 7) || diffDaysLastBets > 7) {
         await Mail.send((message) => {
           message
             .from('admin@bet.lotery.com')
