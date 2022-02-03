@@ -2,7 +2,7 @@ import Game from 'App/Models/Game';
 import Permission from 'App/Models/Permission';
 import User from 'App/Models/User';
 import UserPermission from 'App/Models/UserPermission';
-import test, { group } from 'japa';
+import test from 'japa';
 import request from 'supertest';
 import { v4 as uuidV4 } from 'uuid';
 
