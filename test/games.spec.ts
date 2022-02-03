@@ -42,6 +42,34 @@ test.group('Create Game', (group) => {
     assert.exists(game.id && game.secureId);
   });
 
+  test('Should not able to create a new game with only player privilegies', async (assert) => {
+    const userGame = new User();
+    userGame.name = 'Vinicyus';
+    userGame.email = 'vinicyus21@gmail.com';
+    userGame.password = 'secret';
+    await userGame.save();
+
+    const { body: userToken } = await request(BASE_URL).post('/authenticate').send({
+      email: 'vinicyus21@gmail.com',
+      password: 'secret',
+    });
+
+    await request(BASE_URL)
+      .post('/games')
+      .send({
+        type: 'Quina',
+        description:
+          'Escolha 5 números dos 80 disponíveis na quina. 5, 4, 3 ou 2 acertos. São 5 sorteios semanais e 5 chance de ganhar.',
+        range: 80,
+        price: 5,
+        color: '#F79B71',
+      })
+      .set({
+        Authorization: `Bearer ${userToken.token.token}`,
+      })
+      .expect(403);
+  });
+
   test('Should no be able to create a new game when some field is missing', async () => {
     const { body } = await request(BASE_URL).post('/authenticate').send({
       email: 'admin@bet.lotery.com',
