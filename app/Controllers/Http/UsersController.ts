@@ -10,9 +10,9 @@ import UpdateUserValidator from 'App/Validators/Users/UpdateUserValidator';
 
 export default class UsersController {
   public async store({ request, response }: HttpContextContract) {
-    const { email, name, password } = request.body();
-
     await request.validate(StoreUserValidator);
+
+    const { email, name, password } = request.body();
 
     try {
       const user = new User();
@@ -38,7 +38,7 @@ export default class UsersController {
           .htmlView('emails/newuser', { name: user.name });
       });
 
-      return response.created();
+      return response.created(user);
     } catch (error) {
       response.handleError({
         status: error.status || 400,
@@ -70,11 +70,11 @@ export default class UsersController {
   }
 
   public async destroy({ request, response }: HttpContextContract) {
-    const { id } = request.params();
+    const { id: secureId } = request.params();
 
     await request.validate(DestroyUserValidator);
 
-    const userExists = await User.findOrFail(id);
+    const userExists = await User.findByOrFail('secure_id', secureId);
 
     await userExists.delete();
 
@@ -82,13 +82,13 @@ export default class UsersController {
   }
 
   public async update({ request }: HttpContextContract) {
-    const { id } = request.params();
+    const { id: secureId } = request.params();
 
     const { email, name } = request.body();
 
     await request.validate(UpdateUserValidator);
 
-    const userExists = await User.findOrFail(id);
+    const userExists = await User.findByOrFail('secureId', secureId);
 
     email ? (userExists.email = email) : '';
 

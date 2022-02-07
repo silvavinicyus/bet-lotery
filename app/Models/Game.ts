@@ -4,7 +4,10 @@ import { v4 as uuidV4 } from 'uuid';
 
 export default class Game extends BaseModel {
   @column({ isPrimary: true })
-  public id: string;
+  public id: number;
+
+  @column()
+  public secureId: string;
 
   @column()
   public type: string;
@@ -32,6 +35,6 @@ export default class Game extends BaseModel {
 
   @beforeCreate()
   public static createUUID(game: Game) {
-    game.id = uuidV4();
+    game.secureId = uuidV4();
   }
 }

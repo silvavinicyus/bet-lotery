@@ -1,7 +1,9 @@
 import Hash from '@ioc:Adonis/Core/Hash';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
+import ApiToken from 'App/Models/ApiToken';
 import Token from 'App/Models/Token';
 import User from 'App/Models/User';
+import UserPermission from 'App/Models/UserPermission';
 import ResetPasswordValidator from 'App/Validators/ForgotPassword/ResetPasswordValidator';
 
 export default class ResetPasswordController {
@@ -18,6 +20,8 @@ export default class ResetPasswordController {
     user.password = await Hash.make(password);
 
     await user.save();
+
+    await ApiToken.query().delete().where('user_id', user.id);
 
     await tokenExists.delete();
 

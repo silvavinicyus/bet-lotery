@@ -6,13 +6,16 @@ import User from './User';
 
 export default class Bet extends BaseModel {
   @column({ isPrimary: true })
-  public id: string;
+  public id: number;
 
   @column()
-  public gameId: string;
+  public secureId: string;
 
   @column()
-  public userId: string;
+  public gameId: number;
+
+  @column()
+  public userId: number;
 
   @column()
   public numbers: string;
@@ -31,6 +34,6 @@ export default class Bet extends BaseModel {
 
   @beforeCreate()
   public static createUUID(bet: Bet) {
-    bet.id = uuidV4();
+    bet.secureId = uuidV4();
   }
 }

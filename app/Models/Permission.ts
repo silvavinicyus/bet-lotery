@@ -4,7 +4,10 @@ import { BaseModel, beforeCreate, column } from '@ioc:Adonis/Lucid/Orm';
 
 export default class Permission extends BaseModel {
   @column({ isPrimary: true })
-  public id: string;
+  public id: number;
+
+  @column()
+  public secureId: string;
 
   @column()
   public type: string;
@@ -17,6 +20,6 @@ export default class Permission extends BaseModel {
 
   @beforeCreate()
   public static createUUID(permission: Permission) {
-    permission.id = uuidV4();
+    permission.secureId = uuidV4();
   }
 }

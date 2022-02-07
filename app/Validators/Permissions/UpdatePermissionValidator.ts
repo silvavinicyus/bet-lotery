@@ -9,7 +9,10 @@ export default class UpdatePermissionValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'permissions', column: 'id' })]),
+      id: schema.string({}, [
+        rules.uuid(),
+        rules.exists({ table: 'permissions', column: 'secure_id' }),
+      ]),
     }),
     type: schema.string({}, [
       rules.minLength(4),

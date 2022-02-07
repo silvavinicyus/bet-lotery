@@ -17,7 +17,7 @@ export default class PermissionsController {
 
     await permission.save();
 
-    return response.created();
+    return response.created(permission);
   }
 
   public async index() {
@@ -39,9 +39,9 @@ export default class PermissionsController {
   public async destroy({ request, response }: HttpContextContract) {
     await request.validate(DestroyPermissionValidator);
 
-    const { id } = request.params();
+    const { id: secureId } = request.params();
 
-    const permission = await Permission.findOrFail(id);
+    const permission = await Permission.findByOrFail('secure_id', secureId);
 
     await permission.delete();
 
@@ -51,10 +51,10 @@ export default class PermissionsController {
   public async update({ request }: HttpContextContract) {
     await request.validate(UpdatePermissionValidator);
 
-    const { id } = request.params();
+    const { id: secureId } = request.params();
     const { type } = request.body();
 
-    const permission = await Permission.findOrFail(id);
+    const permission = await Permission.findByOrFail('secure_id', secureId);
 
     permission.type = type;
 

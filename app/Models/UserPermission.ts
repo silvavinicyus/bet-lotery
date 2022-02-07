@@ -6,13 +6,16 @@ import { v4 as uuidV4 } from 'uuid';
 
 export default class UserPermission extends BaseModel {
   @column({ isPrimary: true })
-  public id: string;
+  public id: number;
 
   @column()
-  public userId: string;
+  public secureId: string;
 
   @column()
-  public permissionId: string;
+  public userId: number;
+
+  @column()
+  public permissionId: number;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
@@ -28,6 +31,6 @@ export default class UserPermission extends BaseModel {
 
   @beforeCreate()
   public static createUUID(permission: Permission) {
-    permission.id = uuidV4();
+    permission.secureId = uuidV4();
   }
 }

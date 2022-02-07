@@ -10,11 +10,13 @@ export default class ForgotPasswordController {
   public async store({ request, response }: HttpContextContract) {
     await request.validate(ForgotPasswordValidator);
 
-    const { email } = request.params();
+    const { secureId } = request.params();
 
-    const user = await User.findByOrFail('email', email);
+    console.log(secureId);
 
-    const token = await Hash.make(`token-password+${email}`);
+    const user = await User.findByOrFail('secure_id', secureId);
+
+    const token = await Hash.make(`token-password+${user.email}`);
 
     await Token.create({
       token: token,
@@ -28,8 +30,8 @@ export default class ForgotPasswordController {
       await Mail.send((message) => {
         message
           .from('admin@bet.lotery.com')
-          .to(email)
-          .subject('Welcome to Bet Lotery!')
+          .to(user.email)
+          .subject('Forgot Password')
           .htmlView('emails/forgotpassword', { name: user.name, url: forgtPasswordUrl });
       })
     );

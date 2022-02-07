@@ -9,8 +9,8 @@ export default class RemovePermissionValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.string({}, [
-        rules.uuid(),
+      id: schema.number([
+        rules.unsigned(),
         rules.exists({ table: 'user_permissions', column: 'id' }),
       ]),
     }),

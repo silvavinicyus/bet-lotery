@@ -4,7 +4,10 @@ import { v4 as uuidV4 } from 'uuid';
 
 export default class Cart extends BaseModel {
   @column({ isPrimary: true })
-  public id: string;
+  public id: number;
+
+  @column()
+  public secureId: string;
 
   @column()
   public value: number;
@@ -17,6 +20,6 @@ export default class Cart extends BaseModel {
 
   @beforeCreate()
   public static createUUID(cart: Cart) {
-    cart.id = uuidV4();
+    cart.secureId = uuidV4();
   }
 }

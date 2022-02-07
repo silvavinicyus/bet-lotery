@@ -22,7 +22,7 @@ export default class GamesController {
 
     await game.save();
 
-    return response.created();
+    return response.created(game);
   }
 
   public async index() {
@@ -31,16 +31,12 @@ export default class GamesController {
     return games;
   }
 
-  public async show({ request, response }: HttpContextContract) {
+  public async show({ request }: HttpContextContract) {
     await request.validate(ShowGameValidator);
 
     const { id } = request.params();
 
     const game = await Game.find(id);
-
-    if (!game) {
-      return response.notFound({ message: 'There is no game with the given id' });
-    }
 
     return game;
   }
@@ -48,13 +44,9 @@ export default class GamesController {
   public async destroy({ request, response }: HttpContextContract) {
     await request.validate(DestroyGameValidator);
 
-    const { id } = request.params();
+    const { id: secureId } = request.params();
 
-    const game = await Game.find(id);
-
-    if (!game) {
-      return response.notFound({ message: 'There is no game with the given id' });
-    }
+    const game = await Game.findByOrFail('secure_id', secureId);
 
     await game.delete();
 
@@ -64,10 +56,10 @@ export default class GamesController {
   public async update({ request }: HttpContextContract) {
     await request.validate(UpdateGameValidator);
 
-    const { id } = request.params();
+    const { id: secureId } = request.params();
     const { type, description, range, price, maxNumber, color } = request.body();
 
-    const game = await Game.findOrFail(id);
+    const game = await Game.findByOrFail('secure_id', secureId);
 
     type ? (game.type = type) : '';
     description ? (game.description = description) : '';

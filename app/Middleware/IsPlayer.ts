@@ -4,7 +4,9 @@ import UserPermission from 'App/Models/UserPermission';
 export default class IsPlayer {
   public async handle({ response, auth }: HttpContextContract, next: () => Promise<void>) {
     if (!auth.user) {
-      return response.unauthorized('User not logged');
+      return response.unauthorized({
+        error: 'User not logged',
+      });
     }
 
     let isAdmin: boolean = false;
@@ -20,7 +22,9 @@ export default class IsPlayer {
     }
 
     if (isAdmin === false) {
-      return response.unauthorized('User not authorized');
+      return response.forbidden({
+        error: 'User does not have permission to access this endpoint',
+      });
     }
 
     await next();

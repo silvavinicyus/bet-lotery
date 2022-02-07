@@ -7,7 +7,10 @@ import UserPermission from './UserPermission';
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
-  public id: string;
+  public id: number;
+
+  @column()
+  public secureId: string;
 
   @column()
   public email: string;
@@ -37,6 +40,6 @@ export default class User extends BaseModel {
 
   @beforeCreate()
   public static createUUID(user: User) {
-    user.id = uuidV4();
+    user.secureId = uuidV4();
   }
 }

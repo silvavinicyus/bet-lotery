@@ -4,7 +4,7 @@ import User from 'App/Models/User';
 
 export default class SendEmailWhenNotBetting extends BaseTask {
   public static get schedule() {
-    return '0 9 * * *';
+    return '48 19 * * *';
   }
   public static get useLock() {
     return false;
@@ -19,9 +19,18 @@ export default class SendEmailWhenNotBetting extends BaseTask {
     const daysInMilliseconds = 86400000;
 
     users.forEach(async (user) => {
-      const diffDays = Math.ceil((dateNow - user.createdAt.toMillis()) / daysInMilliseconds);
+      const lastBet = user.bets.pop();
+      let diffDaysLastBets;
 
-      if (user.bets.length === 0 || diffDays > 7) {
+      if (lastBet) {
+        diffDaysLastBets = Math.ceil((dateNow - lastBet.createdAt.toMillis()) / daysInMilliseconds);
+      }
+
+      const diffDaysUserCreated = Math.ceil(
+        (dateNow - user.createdAt.toMillis()) / daysInMilliseconds
+      );
+
+      if ((user.bets.length === 0 && diffDaysUserCreated >= 7) || diffDaysLastBets > 7) {
         await Mail.send((message) => {
           message
             .from('admin@bet.lotery.com')

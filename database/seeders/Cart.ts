@@ -6,9 +6,9 @@ export default class CartSeeder extends BaseSeeder {
   public static developmentOnly = true;
 
   public async run() {
-    const id = uuidV4();
+    const secureId = uuidV4();
     await Cart.create({
-      id,
+      secureId,
       value: 30,
     });
   }

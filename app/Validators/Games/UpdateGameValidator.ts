@@ -9,7 +9,7 @@ export default class UpdateGameValidator extends CustomMessages {
 
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'games', column: 'id' })]),
+      id: schema.string({}, [rules.uuid(), rules.exists({ table: 'games', column: 'secure_id' })]),
     }),
     type: schema.string.optional({}, [rules.minLength(4)]),
     description: schema.string.optional({}, [rules.minLength(6)]),
