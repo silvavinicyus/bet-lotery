@@ -17,14 +17,6 @@ export default class BetsController {
     let totalValue = 0;
 
     for await (let bet of bets) {
-      // eslint-disable-next-line
-      if (bet.userId != auth.user?.id) {
-        return response.badRequest({
-          error: 'This user does not match with the logged user',
-          bet: bet.userId,
-          auth: auth.user?.id,
-        });
-      }
       const { price } = await Game.findOrFail(bet.gameId);
       totalValue += price;
     }
@@ -41,6 +33,10 @@ export default class BetsController {
         value: totalValue.toLocaleString('pt-br', { minimumFractionDigits: 2 }),
       });
     }
+
+    Array.prototype.forEach.call(bets, (bet) => {
+      bet['userId'] = auth.user?.id;
+    });
 
     await Bet.createMany(bets);
 
