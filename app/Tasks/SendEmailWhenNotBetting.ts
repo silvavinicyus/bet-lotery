@@ -1,4 +1,3 @@
-import Mail from '@ioc:Adonis/Addons/Mail';
 import { BaseTask } from 'adonis5-scheduler/build/src/Scheduler/Task';
 import User from 'App/Models/User';
 import { Kafka } from 'kafkajs';
