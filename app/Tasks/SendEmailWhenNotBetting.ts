@@ -1,4 +1,3 @@
-import Mail from '@ioc:Adonis/Addons/Mail';
 import { BaseTask } from 'adonis5-scheduler/build/src/Scheduler/Task';
 import User from 'App/Models/User';
 import { Kafka } from 'kafkajs';
@@ -7,6 +6,7 @@ export default class SendEmailWhenNotBetting extends BaseTask {
   public static get schedule() {
     return '01 04 * * *';
   }
+
   public static get useLock() {
     return false;
   }
@@ -21,7 +21,7 @@ export default class SendEmailWhenNotBetting extends BaseTask {
 
     const kafka = new Kafka({
       clientId: 'bet-lotery',
-      brokers: ['localhost:9092', 'kafka:29092'],
+      brokers: ['kafka:29092'],
     });
 
     const producerNoBet = kafka.producer();
