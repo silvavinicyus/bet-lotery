@@ -1,11 +1,12 @@
-import Mail from '@ioc:Adonis/Addons/Mail';
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Bet from 'App/Models/Bet';
 import Cart from 'App/Models/Cart';
 import Game from 'App/Models/Game';
+import UserPermission from 'App/Models/UserPermission';
 import DestroyBetValidator from 'App/Validators/Bets/DestroyBetValidator';
 import ShowBetValidator from 'App/Validators/Bets/ShowBetValidator';
 import StoreBetValidator from 'App/Validators/Bets/StoreBetValidator';
+import { Kafka } from 'kafkajs';
 
 export default class BetsController {
   public async store({ auth, request, response }: HttpContextContract) {
@@ -16,7 +17,7 @@ export default class BetsController {
     let totalValue = 0;
 
     for await (let bet of bets) {
-      // eslint-disable-next-line eqeqeq
+      // eslint-disable-next-line
       if (bet.userId != auth.user?.id) {
         return response.badRequest({
           error: 'This user does not match with the logged user',
@@ -43,18 +44,50 @@ export default class BetsController {
 
     await Bet.createMany(bets);
 
-    await Mail.send((message) => {
-      message
-        .from('admin@bet.lotery.com')
-        .to(auth.user?.email || '')
-        .subject('Your bet has been created!')
-        .htmlView('emails/newbet', {
-          name: auth.user?.name,
-          value: totalValue.toLocaleString('pt-br', { minimumFractionDigits: 2 }),
-        });
+    const users = await UserPermission.query().preload('permission').preload('user');
+
+    const kafka = new Kafka({
+      clientId: 'bet-lotery',
+      brokers: ['localhost:9092', 'kafka:29092'],
     });
 
-    return response.created(bets);
+    const producerNormalUser = kafka.producer();
+    const producerAdmin = kafka.producer();
+
+    await producerNormalUser.connect();
+    await producerAdmin.connect();
+
+    const message = {
+      subject: `New bets from user ${auth.user?.name}`,
+      type: 'newBet',
+      username: auth.user?.name,
+      email: auth.user?.email,
+      value: totalValue.toLocaleString('pt-br', { minimumFractionDigits: 2 }),
+    };
+
+    await producerNormalUser.send({
+      topic: 'user_newbet',
+      messages: [{ value: JSON.stringify(message) }],
+    });
+
+    users.forEach(async (admin) => {
+      if (admin.permission.type === 'admin') {
+        const messageAdmin = {
+          subject: `New bet from user ${auth.user?.name}`,
+          type: 'newBetAdmin',
+          username: admin.user.name,
+          email: admin.user.email,
+          value: totalValue.toLocaleString('pt-br', { minimumFractionDigits: 2 }),
+        };
+
+        await producerAdmin.send({
+          topic: 'newbet_admin',
+          messages: [{ value: JSON.stringify(messageAdmin) }],
+        });
+      }
+    });
+
+    return response.created({ bets });
   }
 
   public async index() {

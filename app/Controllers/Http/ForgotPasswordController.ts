@@ -5,6 +5,7 @@ import User from 'App/Models/User';
 import Token from 'App/Models/Token';
 import Env from '@ioc:Adonis/Core/Env';
 import ForgotPasswordValidator from 'App/Validators/ForgotPassword/ForgotPasswordValidator';
+import { Kafka } from 'kafkajs';
 
 export default class ForgotPasswordController {
   public async store({ request, response }: HttpContextContract) {
@@ -26,15 +27,27 @@ export default class ForgotPasswordController {
 
     const forgtPasswordUrl = `${Env.get('FRONTEND_URL')}/reset?token=${token}`;
 
-    console.log(
-      await Mail.send((message) => {
-        message
-          .from('admin@bet.lotery.com')
-          .to(user.email)
-          .subject('Forgot Password')
-          .htmlView('emails/forgotpassword', { name: user.name, url: forgtPasswordUrl });
-      })
-    );
+    const kafka = new Kafka({
+      clientId: 'bet-lotery',
+      brokers: ['localhost:9092', 'kafka:29092'],
+    });
+
+    const producerForgetPassword = kafka.producer();
+
+    await producerForgetPassword.connect();
+
+    const message = {
+      subject: `Forgot Password`,
+      type: 'forgotPassword',
+      username: user.name,
+      email: user.email,
+      url: forgtPasswordUrl,
+    };
+
+    await producerForgetPassword.send({
+      topic: 'forget_password',
+      messages: [{ value: JSON.stringify(message) }],
+    });
 
     return response.noContent();
   }
