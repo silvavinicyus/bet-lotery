@@ -7,6 +7,7 @@ import DestroyUserValidator from 'App/Validators/Users/DestroyUsersValidator';
 import ShowUserValidator from 'App/Validators/Users/ShowUserValidator';
 import StoreUserValidator from 'App/Validators/Users/StoreUserValidator';
 import UpdateUserValidator from 'App/Validators/Users/UpdateUserValidator';
+import { Kafka } from 'kafkajs';
 
 export default class UsersController {
   public async store({ request, response }: HttpContextContract) {
@@ -30,12 +31,25 @@ export default class UsersController {
         permissionId: permission.id,
       });
 
-      await Mail.send((message) => {
-        message
-          .from('admin@bet.lotery.com')
-          .to(user.email)
-          .subject('Welcome to Bet Lotery!')
-          .htmlView('emails/newuser', { name: user.name });
+      const kafka = new Kafka({
+        clientId: 'bet-lotery',
+        brokers: ['localhost:9092', 'kafka:29092'],
+      });
+
+      const producerNewUser = kafka.producer();
+
+      await producerNewUser.connect();
+
+      const message = {
+        subject: `Welcome to Bet Lotery!`,
+        type: 'newAccount',
+        username: user.name,
+        email: user.email,
+      };
+
+      await producerNewUser.send({
+        topic: 'account_created',
+        messages: [{ value: JSON.stringify(message) }],
       });
 
       return response.created(user);

@@ -34,7 +34,7 @@ test.group('User tests with supertest', (group) => {
     });
   });
 
-  test('Should not be able to create a user with weak password', async (assert) => {
+  test('Should not be able to create a user with weak password', async () => {
     await request(BASE_URL)
       .post('/users')
       .send({
